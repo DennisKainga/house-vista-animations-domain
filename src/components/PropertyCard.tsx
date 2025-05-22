@@ -1,6 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export interface PropertyProps {
   id: string;
@@ -19,6 +20,7 @@ export interface PropertyProps {
 }
 
 const PropertyCard = ({
+  id,
   title,
   price,
   location,
@@ -137,8 +139,10 @@ const PropertyCard = ({
             <span className="text-xs text-muted-foreground">Contact:</span>
             <p className="font-medium">{contactNumber}</p>
           </div>
-          <Button variant="outline" size="sm">
-            View Details
+          <Button variant="outline" size="sm" asChild>
+            <Link to={`/property/${id}`}>
+              View Details
+            </Link>
           </Button>
         </div>
       </div>
