@@ -9,10 +9,9 @@ import PropertyListingPage from "./pages/PropertyListingPage";
 import PropertyViewPage from "./pages/PropertyViewPage";
 import NotFound from "./pages/NotFound";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 
-const queryClient = new QueryClient();
-
-// Page transition wrapper
+// Page transition wrapper component
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
   
@@ -31,49 +30,55 @@ const PageTransition = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={
-            <PageTransition>
-              <Index />
-            </PageTransition>
-          } />
-          <Route path="/buy" element={
-            <PageTransition>
-              <PropertyListingPage />
-            </PageTransition>
-          } />
-          <Route path="/rent" element={
-            <PageTransition>
-              <PropertyListingPage />
-            </PageTransition>
-          } />
-          <Route path="/lease" element={
-            <PageTransition>
-              <PropertyListingPage />
-            </PageTransition>
-          } />
-          <Route path="/land" element={
-            <PageTransition>
-              <PropertyListingPage />
-            </PageTransition>
-          } />
-          <Route path="/property/:propertyId" element={
-            <PageTransition>
-              <PropertyViewPage />
-            </PageTransition>
-          } />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+// App component
+const App = () => {
+  // Create a new QueryClient instance inside the component
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={
+              <PageTransition>
+                <Index />
+              </PageTransition>
+            } />
+            <Route path="/buy" element={
+              <PageTransition>
+                <PropertyListingPage />
+              </PageTransition>
+            } />
+            <Route path="/rent" element={
+              <PageTransition>
+                <PropertyListingPage />
+              </PageTransition>
+            } />
+            <Route path="/lease" element={
+              <PageTransition>
+                <PropertyListingPage />
+              </PageTransition>
+            } />
+            <Route path="/land" element={
+              <PageTransition>
+                <PropertyListingPage />
+              </PageTransition>
+            } />
+            <Route path="/property/:propertyId" element={
+              <PageTransition>
+                <PropertyViewPage />
+              </PageTransition>
+            } />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
