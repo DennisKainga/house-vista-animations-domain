@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Box, Environment, OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { useTheme } from 'next-themes';
+import * as THREE from 'three';
 
 // Rotating house component
 const House = () => {

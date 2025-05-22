@@ -5,7 +5,13 @@ import { Text, Box, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Simple floating icon component
-const FloatingIcon = ({ position, delay, text }: { position: [number, number, number], delay: number, text: string }) => {
+interface FloatingIconProps {
+  position: [number, number, number];
+  delay: number;
+  text: string;
+}
+
+const FloatingIcon = ({ position, delay, text }: FloatingIconProps) => {
   const meshRef = useRef<THREE.Mesh>(null);
   
   // Animation for floating effect with delays
