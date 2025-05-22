@@ -3,13 +3,33 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import PropertyListingPage from "./pages/PropertyListingPage";
 import PropertyViewPage from "./pages/PropertyViewPage";
 import NotFound from "./pages/NotFound";
+import { AnimatePresence, motion } from "framer-motion";
 
 const queryClient = new QueryClient();
+
+// Page transition wrapper
+const PageTransition = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.3 }}
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -18,12 +38,36 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/buy" element={<PropertyListingPage />} />
-          <Route path="/rent" element={<PropertyListingPage />} />
-          <Route path="/lease" element={<PropertyListingPage />} />
-          <Route path="/land" element={<PropertyListingPage />} />
-          <Route path="/property/:propertyId" element={<PropertyViewPage />} />
+          <Route path="/" element={
+            <PageTransition>
+              <Index />
+            </PageTransition>
+          } />
+          <Route path="/buy" element={
+            <PageTransition>
+              <PropertyListingPage />
+            </PageTransition>
+          } />
+          <Route path="/rent" element={
+            <PageTransition>
+              <PropertyListingPage />
+            </PageTransition>
+          } />
+          <Route path="/lease" element={
+            <PageTransition>
+              <PropertyListingPage />
+            </PageTransition>
+          } />
+          <Route path="/land" element={
+            <PageTransition>
+              <PropertyListingPage />
+            </PageTransition>
+          } />
+          <Route path="/property/:propertyId" element={
+            <PageTransition>
+              <PropertyViewPage />
+            </PageTransition>
+          } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -2,6 +2,9 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Heart } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export interface PropertyProps {
   id: string;
@@ -36,32 +39,57 @@ const PropertyCard = ({
 }: PropertyProps) => {
   // Format price with commas
   const formattedPrice = price.toLocaleString();
-
+  const [isSaved, setIsSaved] = useState(false);
+  
   // Calculate animation delay based on index
   const animationDelay = `${(index % 8) * 100}ms`;
 
+  const handleSaveProperty = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsSaved(!isSaved);
+    toast(
+      isSaved ? "Property removed from saved items" : "Property saved to your list",
+      {
+        description: isSaved ? "You can add it again anytime" : "View all saved properties in your account",
+      }
+    );
+  };
+
   return (
     <div
-      className="property-card property-card-hover bg-white rounded-lg overflow-hidden shadow-md"
+      className="property-card bg-white rounded-xl overflow-hidden shadow-md hover-lift"
       style={{ animationDelay }}
     >
       {/* Property Image */}
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-52 overflow-hidden">
         <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
         />
-        <Badge
-          variant="secondary"
-          className="absolute top-2 left-2 capitalize font-semibold"
-        >
-          For {listing}
-        </Badge>
+        <div className="absolute top-0 inset-x-0 p-3 flex justify-between items-center">
+          <Badge
+            variant="secondary"
+            className="capitalize font-medium shadow-md backdrop-blur-sm bg-white/80"
+          >
+            For {listing}
+          </Badge>
+          
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className={`rounded-full h-8 w-8 ${isSaved ? 'bg-primary text-white' : 'bg-white/80 backdrop-blur-sm'} shadow-md`}
+            onClick={handleSaveProperty}
+          >
+            <Heart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+          </Button>
+        </div>
+        
         {isFeatured && (
           <Badge
             variant="default"
-            className="absolute top-2 right-2 bg-accent text-white"
+            className="absolute bottom-3 right-3 bg-accent text-white shadow-md"
           >
             Featured
           </Badge>
@@ -69,10 +97,16 @@ const PropertyCard = ({
       </div>
 
       {/* Property Details */}
-      <div className="p-4">
-        <p className="text-xl font-bold text-foreground">${formattedPrice}</p>
-        <h3 className="font-medium text-lg mt-1">{title}</h3>
-        <p className="text-muted-foreground text-sm mt-1">{location}</p>
+      <div className="p-5">
+        <div className="flex flex-col">
+          <p className="text-xl font-bold text-foreground">${formattedPrice}
+            <span className="text-sm font-normal text-muted-foreground ml-1">
+              {listing === "rent" || listing === "lease" ? "/month" : ""}
+            </span>
+          </p>
+          <h3 className="font-medium text-lg mt-1 line-clamp-1">{title}</h3>
+          <p className="text-muted-foreground text-sm mt-1">{location}</p>
+        </div>
 
         {/* Property Specs */}
         <div className="flex items-center mt-4 text-sm text-muted-foreground">
@@ -139,7 +173,7 @@ const PropertyCard = ({
             <span className="text-xs text-muted-foreground">Contact:</span>
             <p className="font-medium">{contactNumber}</p>
           </div>
-          <Button variant="outline" size="sm" asChild>
+          <Button variant="outline" size="sm" asChild className="rounded-full px-4">
             <Link to={`/property/${id}`}>
               View Details
             </Link>
